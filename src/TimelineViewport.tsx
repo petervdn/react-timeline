@@ -1,13 +1,8 @@
 import { NumberBounds, Size, TimelineItemData, TimeRange } from './types';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { timeToPixels } from './utils/timeToPixels';
 import { TimelineItem } from './TimelineItem';
-import { useGesture } from '@use-gesture/react';
-import {
-  getLocalMousePositionByWheelState,
-  getNewTimeRangeForZoomFactor,
-  getTimeForPosition,
-} from './utils/utils';
+import { useViewportInteraction } from './utils/useViewportInteraction';
 
 type Props = {
   size: Size;
@@ -30,38 +25,16 @@ export const TimelineViewport = ({
   durationBounds,
   setTimeRange,
 }: Props) => {
-  const elementRef = useRef<HTMLDivElement>(null);
   const [canvasContext, setCanvasContext] =
     useState<CanvasRenderingContext2D>();
 
-  useGesture(
-    {
-      onWheel: state => {
-        const mousePosition = getLocalMousePositionByWheelState(
-          state,
-          elementRef.current as HTMLDivElement
-        );
-        //
-        const time = getTimeForPosition(
-          mousePosition.x,
-          timeRange,
-          timePerPixel
-        );
-
-        const newZoomFactor =
-          zoomFactor + 0.08 * zoomFactor * state.direction[1];
-
-        const newTimeRange = getNewTimeRangeForZoomFactor(
-          timeRange,
-          newZoomFactor,
-          durationBounds,
-          time
-        );
-        setTimeRange(newTimeRange);
-      },
-    },
-    { target: elementRef }
-  );
+  const elementRef = useViewportInteraction({
+    timeRange,
+    timePerPixel,
+    zoomFactor,
+    setTimeRange,
+    durationBounds,
+  });
 
   return (
     <div>

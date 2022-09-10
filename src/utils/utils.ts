@@ -46,7 +46,7 @@ export const getZoomFactor = (
  * @param newTimeRangeDuration
  * @param zoomCenterTime
  */
-export const getNewTimeWindowForDuration = (
+const getNewTimeWindowForDuration = (
   currentTimeRange: TimeRange,
   newTimeRangeDuration: number,
   zoomCenterTime: number
