@@ -28,7 +28,7 @@ Test.args = {
     { time: { start: 500, end: 900 } },
     { time: { start: 910, end: 980 } },
   ],
-  maxRange: { start: 100, end: 1000 },
+  maxTimeRange: { start: 100, end: 1000 },
   zoom: 1,
   minViewDuration: 10,
 };

@@ -1,37 +1,83 @@
-import { Range, Size, TimelineItemData } from './types';
-import { useState } from 'react';
+import { NumberBounds, Size, TimelineItemData, TimeRange } from './types';
+import { useRef, useState } from 'react';
 import { timeToPixels } from './utils/timeToPixels';
 import { TimelineItem } from './TimelineItem';
+import { useGesture } from '@use-gesture/react';
+import {
+  getLocalMousePositionByWheelState,
+  getNewTimeRangeForZoomFactor,
+  getTimeForPosition,
+} from './utils/utils';
 
 type Props = {
   size: Size;
-  viewRange: Range;
+  timeRange: TimeRange;
   items: Array<TimelineItemData>;
   itemHeight: number;
+  timePerPixel: number;
+  zoomFactor: number;
+  durationBounds: NumberBounds;
+  setTimeRange: (range: TimeRange) => void;
 };
 
 export const TimelineViewport = ({
   size,
   items,
-  viewRange,
+  timeRange,
   itemHeight,
+  timePerPixel,
+  zoomFactor,
+  durationBounds,
+  setTimeRange,
 }: Props) => {
+  const elementRef = useRef<HTMLDivElement>(null);
   const [canvasContext, setCanvasContext] =
     useState<CanvasRenderingContext2D>();
+
+  useGesture(
+    {
+      onWheel: state => {
+        const mousePosition = getLocalMousePositionByWheelState(
+          state,
+          elementRef.current as HTMLDivElement
+        );
+        //
+        const time = getTimeForPosition(
+          mousePosition.x,
+          timeRange,
+          timePerPixel
+        );
+
+        const newZoomFactor =
+          zoomFactor + 0.08 * zoomFactor * state.direction[1];
+
+        const newTimeRange = getNewTimeRangeForZoomFactor(
+          timeRange,
+          newZoomFactor,
+          durationBounds,
+          time
+        );
+        setTimeRange(newTimeRange);
+      },
+    },
+    { target: elementRef }
+  );
 
   return (
     <div>
       <div
+        ref={elementRef}
         style={{
           width: size.width,
           height: size.height,
           backgroundColor: 'darkkhaki',
           position: 'relative',
+          overflow: 'hidden',
         }}
       >
         {items.map((item, index) => {
-          const start = timeToPixels(item.time.start, viewRange, size.width);
-          const end = timeToPixels(item.time.end, viewRange, size.width);
+          const start = timeToPixels(item.time.start, timeRange, size.width);
+          const end = timeToPixels(item.time.end, timeRange, size.width);
 
           return (
             <div
@@ -41,7 +87,6 @@ export const TimelineViewport = ({
                 left: start,
                 top: 0,
                 width: end - start,
-                border: '1px solid black',
                 backgroundColor: 'white',
                 height: itemHeight,
               }}

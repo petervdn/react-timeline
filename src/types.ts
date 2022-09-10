@@ -3,9 +3,14 @@ export type Size = {
   height: number;
 };
 
-export type Range = {
+export type TimeRange = {
   start: number;
   end: number;
+};
+
+export type NumberBounds = {
+  min: number;
+  max: number;
 };
 
 export type TimelineItemData = {
