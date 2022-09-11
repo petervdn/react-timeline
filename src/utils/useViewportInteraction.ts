@@ -5,15 +5,9 @@ import {
   getTimeForPosition,
 } from './utils';
 import { useRef } from 'react';
-import { NumberBounds, TimeRange } from '../types';
+import { useTimeRange } from './useTimeRange';
 
-type Props = {
-  timePerPixel: number;
-  zoomFactor: number;
-  durationBounds: NumberBounds;
-  setTimeRange: (range: TimeRange) => void;
-  timeRange: TimeRange;
-};
+type Props = ReturnType<typeof useTimeRange>;
 
 export const useViewportInteraction = ({
   durationBounds,

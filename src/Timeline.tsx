@@ -1,11 +1,8 @@
-import { NumberBounds, Size, TimelineItemData, TimeRange } from './types';
+import { Size, TimelineItemData, TimeRange } from './types';
 import { TimelineViewport } from './TimelineViewport';
-import { useState } from 'react';
-import {
-  getDurationForTimeRange,
-  getTimePerPixel,
-  getZoomFactor,
-} from './utils/utils';
+
+import { useViewportInteraction } from './utils/useViewportInteraction';
+import { useTimeRange } from './utils/useTimeRange';
 
 type Props = {
   size: Size;
@@ -23,17 +20,10 @@ export const Timeline = ({
   itemHeight,
   minViewDuration,
 }: Props) => {
-  const [timeRange, _setTimeRange] = useState(maxTimeRange);
-  const timePerPixel = getTimePerPixel(timeRange, size.width);
-  const durationBounds: NumberBounds = {
-    min: minViewDuration,
-    max: getDurationForTimeRange(maxTimeRange),
-  };
-  const zoomFactor = getZoomFactor(timeRange, durationBounds);
+  const timeRangeProps = useTimeRange(maxTimeRange, minViewDuration, size);
+  const elementRef = useViewportInteraction(timeRangeProps);
 
-  const setTimeRange = (range: TimeRange) => {
-    _setTimeRange(range);
-  };
+  const { timeRange, zoomFactor } = timeRangeProps;
 
   return (
     <>
@@ -42,14 +32,11 @@ export const Timeline = ({
         {zoomFactor.toFixed(5)})
       </h1>
       <TimelineViewport
+        ref={elementRef}
         size={size}
         timeRange={timeRange}
         items={items}
         itemHeight={itemHeight}
-        timePerPixel={timePerPixel}
-        zoomFactor={zoomFactor}
-        durationBounds={durationBounds}
-        setTimeRange={setTimeRange}
       />
     </>
   );
