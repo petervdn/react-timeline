@@ -23,25 +23,13 @@ export const Timeline = ({
   itemHeight,
   minViewDuration,
 }: Props) => {
-  // const maxViewDuration = maxRange.end - maxRange.start;
-  // const [centerTime] = useState(0.5 * maxViewDuration);
   const [timeRange, _setTimeRange] = useState(maxTimeRange);
-
   const timePerPixel = getTimePerPixel(timeRange, size.width);
-
   const durationBounds: NumberBounds = {
     min: minViewDuration,
     max: getDurationForTimeRange(maxTimeRange),
   };
   const zoomFactor = getZoomFactor(timeRange, durationBounds);
-  // const viewDuration =
-  //   minViewDuration + zoom * (maxViewDuration - minViewDuration);
-
-  // const viewRange = {
-  //   start: centerTime - 0.5 * viewDuration,
-  //   end: centerTime + 0.5 * viewDuration,
-  // };
-  // console.log(maxViewDuration, viewDuration);
 
   const setTimeRange = (range: TimeRange) => {
     _setTimeRange(range);

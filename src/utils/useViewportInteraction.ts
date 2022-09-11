@@ -37,8 +37,7 @@ export const useViewportInteraction = ({
           timePerPixel
         );
 
-        const newZoomFactor =
-          zoomFactor + 0.08 * zoomFactor * state.direction[1];
+        const newZoomFactor = zoomFactor + 0.008 * state.direction[1];
 
         const newTimeRange = getNewTimeRangeForZoomFactor(
           timeRange,
