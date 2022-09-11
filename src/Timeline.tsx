@@ -5,7 +5,7 @@ import { useViewportInteraction } from './utils/useViewportInteraction';
 import { useTimeRange } from './utils/useTimeRange';
 
 type Props = {
-  size: Size;
+  viewportSize: Size;
   items: Array<TimelineItemData>;
   itemHeight: number;
   maxTimeRange: TimeRange;
@@ -14,13 +14,17 @@ type Props = {
 };
 
 export const Timeline = ({
-  size,
+  viewportSize,
   items,
   maxTimeRange,
   itemHeight,
   minViewDuration,
 }: Props) => {
-  const timeRangeProps = useTimeRange(maxTimeRange, minViewDuration, size);
+  const timeRangeProps = useTimeRange(
+    maxTimeRange,
+    minViewDuration,
+    viewportSize.width
+  );
   const elementRef = useViewportInteraction(timeRangeProps);
 
   const { timeRange, zoomFactor } = timeRangeProps;
@@ -28,12 +32,12 @@ export const Timeline = ({
   return (
     <>
       <h1>
-        Timeline {timeRange.start.toFixed(2)}-{timeRange.end.toFixed(2)} (zoom:{' '}
-        {zoomFactor.toFixed(5)})
+        Timeline {timeRange.start.toFixed(2)}-{timeRange.end.toFixed(2)}
+        (zoom: {zoomFactor.toFixed(5)})
       </h1>
       <TimelineViewport
         ref={elementRef}
-        size={size}
+        size={viewportSize}
         timeRange={timeRange}
         items={items}
         itemHeight={itemHeight}

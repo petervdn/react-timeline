@@ -4,15 +4,15 @@ import {
   getTimePerPixel,
   getZoomFactor,
 } from './utils';
-import { NumberBounds, Size, TimeRange } from '../types';
+import { NumberBounds, TimeRange } from '../types';
 
 export const useTimeRange = (
   maxTimeRange: TimeRange,
   minDuration: number,
-  size: Size
+  viewportWidth: number
 ) => {
   const [timeRange, setTimeRange] = useState(maxTimeRange);
-  const timePerPixel = getTimePerPixel(timeRange, size.width);
+  const timePerPixel = getTimePerPixel(timeRange, viewportWidth);
   const durationBounds: NumberBounds = {
     min: minDuration,
     max: getDurationForTimeRange(maxTimeRange),

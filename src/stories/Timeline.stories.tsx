@@ -21,7 +21,7 @@ const Template: ComponentStory<typeof Timeline> = args => (
 export const Test = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Test.args = {
-  size: { width: 800, height: 100 },
+  viewportSize: { width: 800, height: 100 },
   itemHeight: 20,
   items: [
     { time: { start: 200, end: 300 } },
